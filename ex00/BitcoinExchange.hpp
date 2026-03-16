@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <map>
+#include <fstream>
+
 
 class BitcoinExchange
 {

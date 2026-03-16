@@ -17,7 +17,7 @@ $(NAME): $(OBJ)
 	@echo  "\nCreated executable '$(NAME)'"
 
 
-$(OBJDIR)/%.o: %.cpp Makefile *h  | $(OBJDIR)
+$(OBJDIR)/%.o: %.cpp Makefile *hpp  | $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 	
 $(OBJDIR):
@@ -31,11 +31,5 @@ fclean: clean
 
 re: fclean all
 
-exec : all clean
-	./$(NAME)
 
-.PHONY: all clean fclean re exec
-
-ifdef DEBUG
-CXXFLAGS += -DDEBUG
-endif
+.PHONY: all clean fclean re 
