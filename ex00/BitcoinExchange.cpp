@@ -43,7 +43,7 @@ void BitcoinExchange::InitData()
 			std::string valStr = line.substr(commaPos + 1);
 
 			char* end;
-			float value = std::strtof(valStr.c_str(), &end);
+			float value = strtof(valStr.c_str(), &end);
 			if (*end == '\0')
 				BitcoinExchange::data[date] = value;
 		}
@@ -73,9 +73,9 @@ bool BitcoinExchange::IsValidDate(const std::string& date)
 	if (!isAllDigits(year) || !isAllDigits(month) || !isAllDigits(day))
 		return false;
 
-	int yr   = std::atoi(year.c_str());
-	int mnth = std::atoi(month.c_str());
-	int dy   = std::atoi(day.c_str());
+	int yr   = atoi(year.c_str());
+	int mnth = atoi(month.c_str());
+	int dy   = atoi(day.c_str());
 
 	if (mnth < 1 || mnth > 12 || dy < 1 || dy > 31)
 		return false;
@@ -107,7 +107,7 @@ bool BitcoinExchange::IsValidDate(const std::string& date)
 bool BitcoinExchange::ValidateValue(const std::string& valStr, const std::string& date)
 {
 	char* end;
-	float val = std::strtof(valStr.c_str(), &end);
+	float val = strtof(valStr.c_str(), &end);
 
 	if (*end != '\0' || valStr.empty())
 	{
