@@ -11,8 +11,8 @@ int main(int ac, char **av)
 
 	try
 	{
-		BitcoinExchange::InitData();
-		BitcoinExchange::ParseAndValidateInput(av[1]);
+		BitcoinExchange::fill_map_with_data_file();
+		BitcoinExchange::btc(av[1]);
 	}
 	catch (const std::exception& ex)
 	{

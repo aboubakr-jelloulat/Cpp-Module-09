@@ -19,8 +19,10 @@ class BitcoinExchange
 
 public:
 	static std::map<std::string, float> data;
-	static void InitData();
-	static void ParseAndValidateInput(const std::string& filename);
+	static void fill_map_with_data_file();
+	static void btc(const std::string& filename);
+
+	static void Print();
 
 
 };

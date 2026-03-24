@@ -18,8 +18,19 @@ BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& src)
 
 BitcoinExchange::~BitcoinExchange() {}
 
+void BitcoinExchange::Print()
+{
+	std::map<std::string, float>::iterator it;
 
-void BitcoinExchange::InitData()
+	std::map<std::string, float>::iterator begin = BitcoinExchange::data.begin();
+	std::map<std::string, float>::iterator end = BitcoinExchange::data.end();
+
+	for (it = begin; it != end; ++it)
+		std::cout << it->first << " :::: " << it->second << std::endl;
+
+}
+
+void BitcoinExchange::fill_map_with_data_file()
 {
 	std::string filename = "./database/data.csv";
 	std::ifstream file;
@@ -42,13 +53,16 @@ void BitcoinExchange::InitData()
 			std::string date   = line.substr(0, commaPos);
 			std::string valStr = line.substr(commaPos + 1);
 
-			char* end;
-			float value = strtof(valStr.c_str(), &end);
-			if (*end == '\0')
+			char* endptr;
+			float value = strtof(valStr.c_str(), &endptr);
+			if (*endptr == '\0')
 				BitcoinExchange::data[date] = value;
+			else // 2009-01-08,xxx
+				throw std::runtime_error("invalid value in data.csv: " + valStr);
 		}
 	}
 	file.close();
+	// Print();
 }
 
 
@@ -79,7 +93,7 @@ bool BitcoinExchange::IsValidDate(const std::string& date)
 
 	if (mnth < 1 || mnth > 12 || dy < 1 || dy > 31)
 		return false;
-
+ 
 	// months with max 30 days
 	if ((mnth == 4 || mnth == 6 || mnth == 9 || mnth == 11) && dy > 30)
 		return false;
@@ -96,6 +110,8 @@ bool BitcoinExchange::IsValidDate(const std::string& date)
 	int curYear  = today->tm_year + 1900;
 	int curMonth = today->tm_mon + 1;
 	int curDay   = today->tm_mday;
+
+	// std::cout << "Date : " << curYear << "-" << curMonth << "-" << curDay << std::endl;
 
 	if (yr > curYear) return false;
 	if (yr == curYear && mnth > curMonth) return false;
@@ -131,16 +147,16 @@ bool BitcoinExchange::ValidateValue(const std::string& valStr, const std::string
 		if (it == BitcoinExchange::data.begin())
 		{
 			std::cerr << "Error: too early date => " << date << std::endl;
-			return false;
 		}
 		--it;
 	}
-
+	
 	std::cout << date << " => " << val << " = " << val * it->second << std::endl;
+
 	return true;
 }
 
-void BitcoinExchange::ParseAndValidateInput(const std::string& filename)
+void BitcoinExchange::btc(const std::string& filename)
 {
 	std::ifstream file;
 	file.open(filename.c_str());
@@ -172,7 +188,9 @@ void BitcoinExchange::ParseAndValidateInput(const std::string& filename)
 			continue;
 		}
 
-		ValidateValue(valStr, date);
+		if (!ValidateValue(valStr, date))
+			continue;
+
 	}
 	file.close();
 }
