@@ -17,28 +17,9 @@ RPN &RPN::operator=(const RPN &oth)
 RPN::~RPN() {}
 
 
-bool RPN::isOperator(const std::string &token)
-{
-    return (token == "+" || token == "-" || token == "*" || token == "/");
-}
-
-int RPN::applyOperator(const std::string &op, int a, int b)
-{
-    if (op == "+") return a + b;
-    if (op == "-") return a - b;
-    if (op == "*") return a * b;
-    if (op == "/")
-    {
-        if (b == 0)
-            throw std::runtime_error("division by zero");
-        return a / b;
-    }
-    throw std::invalid_argument("unknown operator: " + op);
-}
-
 int RPN::evalRPN(const std::string &expression)
 {
-    std::stack<int>  stack;
+    std::stack<int>   stack;
     std::stringstream stream(expression);
     std::string       token;
 
@@ -48,15 +29,29 @@ int RPN::evalRPN(const std::string &expression)
         {
             stack.push(token[0] - '0');
         }
-        else if (isOperator(token))
+        else if (token == "+" || token == "-" || token == "*" || token == "/")
         {
             if (stack.size() < 2)
-                throw std::logic_error("not enough operands for operator '" + token + "'");
+                throw std::logic_error("not enough operands to do this operation");
 
-            int b = stack.top(); stack.pop();
-            int a = stack.top(); stack.pop();
+            int b = stack.top();
+            stack.pop();
 
-            stack.push(applyOperator(token, a, b));
+            int a = stack.top();
+            stack.pop();
+
+            if (token == "+")
+                stack.push(a + b);
+            else if (token == "-")
+                stack.push(a - b);
+            else if (token == "*")
+                stack.push(a * b);
+            else
+            {
+                if (b == 0)
+                    throw std::runtime_error("division by zero");
+                stack.push(a / b);
+            }
         }
         else
         {
@@ -69,3 +64,4 @@ int RPN::evalRPN(const std::string &expression)
 
     return stack.top();
 }
+
