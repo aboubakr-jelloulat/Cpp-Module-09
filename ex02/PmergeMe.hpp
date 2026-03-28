@@ -25,7 +25,7 @@ class PmergeMe
     void    parseArgs(int ac, char **av);
 
     /*sorting algorithme*/
-    void    fordJohnsonVec(std::vector<int> &seq);
+    std::vector<int>    fordJohnsonVec(std::vector<int> &seq);
 
     void    fordJohnsonDeq(std::deque<int> &seq);
 

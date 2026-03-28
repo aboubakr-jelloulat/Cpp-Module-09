@@ -70,6 +70,36 @@ void    PmergeMe::parseArgs(int ac, char **av)
     }
 }
 
+/*  ********* vector ********* */
+
+
+std::vector<int>  PmergeMe::fordJohnsonVec(std::vector<int> &seq)
+{
+    if (seq.size() <= 1)
+        return seq;
+    
+    std::vector<int> a, b, sorted_nums;
+
+    for (size_t i = 0; i < seq.size(); ++i, ++i)
+    {
+        if (i + 1 < seq.size())
+        {
+            int big = std::max(seq[i], seq[i + 1]);
+            int small = std::min(seq[i], seq[i + 1]);
+
+            a.push_back(big);
+            b.push_back(small);
+        }
+        else
+            a.push_back(seq[i]); // handle odd element stragler
+    }
+
+    sorted_nums = fordJohnsonVec(a);
+
+    // std::vector<int> indexes = generateOrders(sorted_nums.size());
+
+    return sorted_nums;
+}
 
 
 void    PmergeMe::run(int ac, char **av)
@@ -79,7 +109,9 @@ void    PmergeMe::run(int ac, char **av)
     printSequence("Before:", _vec);
 
     clock_t vecStart = clock();
-    // fordJohnsonVec(_vec);
+    std::vector<int> vect =  fordJohnsonVec(_vec);
+    (void)vect; // to avoid unused variable warning
+
     clock_t vecEnd   = clock();
 
     clock_t deqStart = clock();
