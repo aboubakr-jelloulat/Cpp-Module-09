@@ -3,10 +3,8 @@
 # include <iostream>
 # include <vector>
 # include <deque>
-# include <ctime>
 # include <sstream>
 # include <string>
-# include <stdexcept>
 # include <iomanip>
 
 
@@ -26,6 +24,9 @@ class PmergeMe
 
     /*sorting algorithme*/
     std::vector<int>    fordJohnsonVec(std::vector<int> &seq);
+    std::vector<int>    generateOrders(size_t size);
+    std::vector<int>    jacobsthal(size_t n);
+
 
     void    fordJohnsonDeq(std::deque<int> &seq);
 
