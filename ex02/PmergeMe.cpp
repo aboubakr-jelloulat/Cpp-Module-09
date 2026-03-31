@@ -36,6 +36,9 @@ void PmergeMe::printSequence(const std::string &title, const Container &c) const
     std::cout << "\n";
 }
 
+/*
+    clock_t : CPU time used by your program
+*/
 double PmergeMe::elapsedMicros(clock_t start, clock_t end)
 {
     return static_cast<double>(end - start) / CLOCKS_PER_SEC * 1e6;
@@ -63,7 +66,7 @@ void PmergeMe::parseArgs(int ac, char **av)
         if (value <= 0)
             throw std::invalid_argument("Error: Enter only positive integers.");
 
-        if (value > 2147483647)
+        if (value > std::numeric_limits<int>::max())
             throw std::invalid_argument("Error: integer overflow in [" + token + "].");
 
         _vec.push_back(static_cast<int>(value));

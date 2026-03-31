@@ -6,6 +6,7 @@
 # include <sstream>
 # include <string>
 # include <iomanip>
+# include <algorithm>
 
 
 class PmergeMe
