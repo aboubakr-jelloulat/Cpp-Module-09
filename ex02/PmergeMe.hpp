@@ -24,11 +24,13 @@ class PmergeMe
 
     /*sorting algorithme*/
     std::vector<int>    fordJohnsonVec(std::vector<int> &seq);
-    std::vector<int>    generateOrders(size_t size);
-    std::vector<int>    jacobsthal(size_t n);
+    std::vector<int>    generateOrdersVec(size_t size);
+    std::vector<int>    jacobsthalVec(size_t n);
 
 
-    void    fordJohnsonDeq(std::deque<int> &seq);
+    std::deque<int>    fordJohnsonDeq(std::deque<int> &seq);
+    std::deque<int>    generateOrdersDeq(size_t size);
+    std::deque<int>    jacobsthalDeq(size_t n);
 
 public:
 
