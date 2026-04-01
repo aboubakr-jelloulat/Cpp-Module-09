@@ -103,20 +103,6 @@ bool BitcoinExchange::IsValidDate(const std::string& date)
 	if (mnth == 2 && dy > (leap ? 29 : 28))
 		return false;
 
-	// check date is not in the future
-	std::time_t now  = std::time(NULL);
-	std::tm*    today = std::localtime(&now);
-
-	int curYear  = today->tm_year + 1900;
-	int curMonth = today->tm_mon + 1;
-	int curDay   = today->tm_mday;
-
-	// std::cout << "Date : " << curYear << "-" << curMonth << "-" << curDay << std::endl;
-
-	if (yr > curYear) return false;
-	if (yr == curYear && mnth > curMonth) return false;
-	if (yr == curYear && mnth == curMonth && dy > curDay) return false;
-
 	return true;
 }
 
@@ -125,7 +111,7 @@ bool BitcoinExchange::ValidateValue(const std::string& valStr, const std::string
 	char* end;
 	float val = strtof(valStr.c_str(), &end);
 
-	if (*end != '\0' || valStr.empty())
+	if (*end != '\0' || valStr.empty()) // empty : 2011-01-03 | 
 	{
 		std::cerr << "Error: bad input => " << date << " | " << valStr << std::endl;
 		return false;
@@ -141,18 +127,18 @@ bool BitcoinExchange::ValidateValue(const std::string& valStr, const std::string
 		return false;
 	}
 
-	std::map<std::string, float>::iterator it = BitcoinExchange::data.lower_bound(date);
-	if (it == BitcoinExchange::data.end() || it->first != date)
-	{
-		if (it == BitcoinExchange::data.begin())
-		{
-			std::cerr << "Error: too early date => " << date << std::endl;
-		}
-		--it;
-	}
-	
-	std::cout << date << " => " << val << " = " << val * it->second << std::endl;
+	std::map<std::string, float>::iterator it = BitcoinExchange::data.upper_bound(date); // > 
 
+	if (it == BitcoinExchange::data.begin()) // first element
+	{
+		std::cerr << "Error: too early date => " << date << std::endl;
+		return false;
+	}
+
+	--it;
+
+	std::cout << date << " => " << val << " = " << val * it->second << std::endl;
+	
 	return true;
 }
 
