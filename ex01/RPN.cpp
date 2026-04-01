@@ -17,6 +17,11 @@ RPN &RPN::operator=(const RPN &oth)
 RPN::~RPN() {}
 
 
+//  6 + 2 * 4  => 6 2 4 * +
+
+
+
+
 int RPN::evalRPN(const std::string &expression)
 {
     std::stack<int>   stack;
@@ -31,7 +36,7 @@ int RPN::evalRPN(const std::string &expression)
         }
         else if (token == "+" || token == "-" || token == "*" || token == "/")
         {
-            if (stack.size() < 2)
+            if (stack.size() <= 1)
                 throw std::logic_error("not enough operands to do this operation");
 
             int b = stack.top();
