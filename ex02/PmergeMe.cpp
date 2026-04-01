@@ -120,6 +120,10 @@ std::vector<int> PmergeMe::generateOrdersVec(size_t size)
 {
     std::vector<int> indexes = jacobsthalVec(size);
 
+    std::cout << "--- Indexes : ----" << std::endl;
+    for (int i = 0; i < size; i++)
+        std::cout << indexes[i] << " ";
+
     // convert to 0 based indexing
     for (std::vector<int>::iterator it = indexes.begin() + 1; it != indexes.end(); ++it)
         *it -= 1;
