@@ -38,6 +38,10 @@ void PmergeMe::printSequence(const std::string &title, const Container &c) const
 
 /*
     clock_t : CPU time used by your program
+
+    CLOCKS_PER_SEC : How many clock ticks happen in 1 second, / to Converts ticks to seconds
+
+    1e6 : seconds -> microseconds
 */
 double PmergeMe::elapsedMicros(clock_t start, clock_t end)
 {
@@ -66,7 +70,7 @@ void PmergeMe::parseArgs(int ac, char **av)
         if (value <= 0)
             throw std::invalid_argument("Error: Enter only positive integers.");
 
-        if (value > std::numeric_limits<int>::max())
+        if (value > INT_MAX)
             throw std::invalid_argument("Error: integer overflow in [" + token + "].");
 
         _vec.push_back(static_cast<int>(value));
@@ -118,19 +122,42 @@ std::vector<int> PmergeMe::jacobsthalVec(size_t n)
 
 std::vector<int> PmergeMe::generateOrdersVec(size_t size)
 {
+    // [0, 1, 1, 3, 5, 11, 21, 43]
     std::vector<int> indexes = jacobsthalVec(size);
 
-    std::cout << "--- Indexes : ----" << std::endl;
-    for (int i = 0; i < size; i++)
-        std::cout << indexes[i] << " ";
+    #ifdef DEBUG
+        std::cout << "--- Indexes : ----" << std::endl;
+        for (size_t i = 0; i < indexes.size(); i++)
+            std::cout << indexes[i] << " ";
+        std::cout << "\n\n";
+    #endif
 
-    // convert to 0 based indexing
+    
+    /*
+        convert to 0 based indexing
+
+        Jacobsthal numbers are mathematical positions 1 based style but vector use 0 based indexing 
+
+        [0, 0, 0, 2, 4]
+    */
     for (std::vector<int>::iterator it = indexes.begin() + 1; it != indexes.end(); ++it)
         *it -= 1;
 
+    #ifdef DEBUG
+        std::cout << "--- Indexes before convert to 0 based indexing : ----" << std::endl;
+        for (size_t i = 0; i < indexes.size(); i++)
+            std::cout << indexes[i] << " ";
+        std::cout << "\n\n";
+    #endif
+
+
     std::vector<int> unique;
 
-    // remove duplicates
+    /*
+        remove duplicates  :  because Each element in b should be inserted only once so You will not insert the same element multiple time
+
+        [0, 2, 4]
+    */
     for (std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); ++it)
     {
         if (*it >= 0 && *it < static_cast<int>(size) && std::find(unique.begin(), unique.end(), *it) == unique.end())
@@ -139,12 +166,27 @@ std::vector<int> PmergeMe::generateOrdersVec(size_t size)
         }
     }
 
-    // add missing indexes
+    #ifdef DEBUG
+        std::cout << "--- unique before remove duplicates : ----" << std::endl;
+        for (size_t i = 0; i < unique.size(); i++)
+            std::cout << unique[i] << " ";
+        std::cout << "\n\n";
+    #endif
+
+    // add missing indexes  [0, 2, 4, 1, 3]
     for (size_t i = 0; i < size; ++i)
     {
         if (std::find(unique.begin(), unique.end(), i) == unique.end())
             unique.push_back(i);
     }
+
+    #ifdef DEBUG
+        std::cout << "--- unique before dd missing indexes : ----" << std::endl;
+        for (size_t i = 0; i < unique.size(); i++)
+            std::cout << unique[i] << " ";
+        std::cout << "\n\n";
+    #endif
+
 
     return unique;
 }
@@ -189,10 +231,6 @@ std::vector<int> PmergeMe::fordJohnsonVec(std::vector<int> &seq)
 
     return sorted_nums;
 }
-
-
-
-
 
 
 /* ********* Deque ********* */
@@ -298,7 +336,7 @@ std::deque<int> PmergeMe::fordJohnsonDeq(std::deque<int> &seq)
     for (size_t i = 0; i < indexes.size(); ++i)
     {
         int pos = indexes[i];
-        int value = b[pos];  
+        int value = b[pos];
 
         std::deque<int>::iterator it = std::lower_bound(sorted_nums.begin(), sorted_nums.end(), value);
 
@@ -311,7 +349,7 @@ std::deque<int> PmergeMe::fordJohnsonDeq(std::deque<int> &seq)
     return seq;
 }
 
-
+// O(n log n)
 
 void PmergeMe::run(int ac, char **av)
 {
@@ -335,3 +373,6 @@ void PmergeMe::run(int ac, char **av)
 
     std::cout << "Time to process a range of " << _deq.size() << " elements with std::deque  : " << elapsedMicros(deqStart, deqEnd) << " us" << std::endl;
 }
+
+
+
